@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    
+        <url>
+            <loc>https://cesar-barata.github.io/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://cesar-barata.github.io/about/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://cesar-barata.github.io/blog/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://cesar-barata.github.io/blog/rust-by-comparison/</loc>
+            
+                <lastmod>2019-08-29</lastmod>
+            
+        </url>
+    
+        <url>
+            <loc>https://cesar-barata.github.io/projects/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://cesar-barata.github.io/projects/portfel/</loc>
+            
+                <lastmod>2019-11-26</lastmod>
+            
+        </url>
+    
+</urlset>

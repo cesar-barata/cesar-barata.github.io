@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>
+    Rust By Comparison | cesarb.org
+</title>
+
+      <!-- CSS -->
+      <link rel="stylesheet" href="https:&#x2F;&#x2F;cesar-barata.github.io&#x2F;print.css" media="print">
+      <link rel="stylesheet" href="https:&#x2F;&#x2F;cesar-barata.github.io&#x2F;poole.css">
+      <link rel="stylesheet" href="https:&#x2F;&#x2F;cesar-barata.github.io&#x2F;hyde.css">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+      
+
+      
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js">
+</script>
+
+    </head>
+
+    <body class=" layout-reverse">
+        
+<div class="sidebar">
+    <div class="container sidebar-sticky">
+        <div class="sidebar-about">
+            
+                <div>
+                  <a href="https:&#x2F;&#x2F;cesar-barata.github.io"><h1>cesarb.org</h1></a>
+                </div>
+                
+            
+        </div>
+
+        <ul class="sidebar-nav">
+            
+            
+            <li class="sidebar-nav-item"><a href="&#x2F;about">About Me</a></li>
+            
+            <li class="sidebar-nav-item"><a href="&#x2F;blog">Blog</a></li>
+            
+            <li class="sidebar-nav-item"><a href="&#x2F;projects">My Projects</a></li>
+            
+            <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;github.com&#x2F;cesar-barata">GitHub</a></li>
+            
+            <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;cesarbarata">LinkedIn</a></li>
+            
+            
+            <br>
+            Copyright © 2019 - 2020
+        </ul>
+    </div>
+</div>
+
+
+        <div class="content container">
+            
+<div class="post">
+  <h1 class="post-title">Rust By Comparison</h1>
+  <span class="post-date">29 August 2019</span>
+  <p>I really like learning new programming languages, especially the ones that make you reconsider some fundamental assumptions you make when writing code or designing a piece of software. I've been playing with <a href="http://rust-lang.org">Rust</a> for some time now and I can definitely say that it's one of these languages.</p>
+<p>In a couple of words, one can say Rust is a high-level low-level programming language. What I mean by that is: Rust is a low-level language, in the sense that its programming model is closer to the hardware's so that you have to consider stuff like memory allocation and deallocation (to a certain degree), procedure calling conventions (call-by-value, call-by-reference, ...) and so on.</p>
+<p>Despite that, it provides many features that are considered high-level, some of which are of great help when dealing with the low-level aspects. In particular, Rust has a very powerful <strong>type system</strong> that help enforce correctness of a lot of programming constructs.</p>
+<p>So let's get into some of the details of what makes Rust such a remarkable language. I won't dedicate much time to Rust's syntax unless it's absolutely necessary, since there are already very good sources for learning that. The focus here is on semantics.</p>
+<h1 id="memory-management-overview">Memory management overview</h1>
+<p>We know that operating systems generally divide a process's memory into regions that have different purposes. Here we are mostly interested in the <strong>stack</strong> and the <strong>heap</strong>, since they're the ones providing storage to a running process.</p>
+<h2 id="the-stack">The stack</h2>
+<p>To see how these regions relate to memory management, consider the following C code:</p>
+<pre style="background-color:#1e1e1e;">
+<span style="color:#9b9b9b;">#include </span><span style="color:#d69d85;">&lt;stdio.h&gt;
+
+</span><span style="color:#569cd6;">struct </span><span style="color:#dcdcdc;">Person {
+  </span><span style="color:#569cd6;">unsigned int</span><span style="color:#dcdcdc;"> age;
+};
+
+</span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person create_person() {
+  </span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person new_person;
+  new_person.age = </span><span style="color:#b5cea8;">25</span><span style="color:#dcdcdc;">;
+  </span><span style="color:#569cd6;">return</span><span style="color:#dcdcdc;"> new_person;
+}
+
+</span><span style="color:#569cd6;">void </span><span style="color:#dcdcdc;">do_stuff(</span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person person) {
+  printf(</span><span style="color:#d69d85;">&quot;</span><span style="color:#b4cea8;">%d</span><span style="color:#d69d85;">&quot;</span><span style="color:#dcdcdc;">, person.age);
+}
+
+</span><span style="color:#569cd6;">int </span><span style="color:#dcdcdc;">main() {
+  </span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person p = create_person();
+  do_stuff(p);
+  </span><span style="color:#608b4e;">// almost finished
+  </span><span style="color:#569cd6;">return </span><span style="color:#b5cea8;">0</span><span style="color:#dcdcdc;">;
+}
+</span></pre>
+<p>The execution steps for this code go roughly as follows: starting at the <code>main</code> function, a variable <code>p</code> of type <code>struct Person</code> is declared, so that we have a corresponding allocation for its storage on <code>main</code>'s stack frame on the stack (obviously), with enough space to store said struct.</p>
+<p>Then <code>create_person</code> is called to initialize <code>p</code>, which creates a stack frame on top of <code>main</code>'s frame. Inside <code>create_person</code>, we have yet another declaration for a <code>struct Person</code> variable, <code>new_person</code>, so we get some space for it on <code>create_person</code>'s stack frame and then write <code>25</code> to its <code>age</code> field. After that, execution returns <code>new_person</code>'s value to the caller, in this case <code>main</code>, and deallocate all space used by the variables on <code>create_person</code>'s frame and pop it from the stack.</p>
+<p>By standard C semantics for assignments, argument passing and return values, <code>new_person</code>'s value is <strong>copied</strong> from <code>create_person</code>'s stack frame space to <code>main</code>'s frame, specifically to the space corresponding to <code>p</code>. For structs, this means copying each field, which can be really expensive.</p>
+<p>Next, we call <code>do_stuff</code> and pass <code>p</code> as argument, so there's another copy of its value, now from <code>main</code>'s stack frame to the <code>person</code> parameter on <code>do_stuff</code>'s frame which was just created. We then print the person's age to the console and return to the <code>main</code> function, and once more all the memory allocated to <code>do_stuff</code> is freed and its stack frame popped.</p>
+<p>Now we're back to the <code>main</code> function, and reach the <code>almost finished</code> comment. Notice that, at this point,  <code>p</code> still holds the (old) copy it got from the <code>create_person</code> function. We then return from the <code>main</code> function and the execution halts.</p>
+<p>All of this stack handling process is performed automatically because the compiler has enough information to generate the appropriate instructions to do so. This is sometimes called <strong>automatic memory</strong> and is very easy to reason about: each variable <strong>and</strong> its storage live only throughout its declared scope, which is syntactically distinguishable, that is, you can see its span just by quickly inspecting the code. Assignments, arguments and return values just copy data from one location to another, so that destroying the ones which are not in scope anymore, doesn't leave any corrupt data or inconsistent state.</p>
+<p>Let's call this copying behavior <strong>Copy Semantics</strong> (not standard terminology). As I mentioned before, this can be really computationally expensive, for example, if we have a huge struct that is passed around a lot.</p>
+<h2 id="the-heap">The heap</h2>
+<p>C programmers know that all this copying can be avoided by using pointers and manual memory allocation on the heap. For instance, we can modify the code from before to look like this:</p>
+<pre style="background-color:#1e1e1e;">
+<span style="color:#9b9b9b;">#include </span><span style="color:#d69d85;">&lt;stdio.h&gt;
+</span><span style="color:#9b9b9b;">#include </span><span style="color:#d69d85;">&lt;stdlib.h&gt;
+
+</span><span style="color:#569cd6;">struct </span><span style="color:#dcdcdc;">Person {
+  </span><span style="color:#569cd6;">unsigned int</span><span style="color:#dcdcdc;"> age;
+};
+
+</span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person</span><span style="color:#569cd6;">* </span><span style="color:#dcdcdc;">create_person() {
+  </span><span style="color:#608b4e;">// malloc may fail by returning NULL, but let&#39;s ignore it for simplicity
+  </span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person</span><span style="color:#569cd6;">*</span><span style="color:#dcdcdc;"> new_person = malloc(</span><span style="color:#569cd6;">sizeof</span><span style="color:#dcdcdc;">(</span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person));
+  new_person-&gt;age = </span><span style="color:#b5cea8;">25</span><span style="color:#dcdcdc;">;
+  </span><span style="color:#569cd6;">return</span><span style="color:#dcdcdc;"> new_person;
+}
+
+</span><span style="color:#569cd6;">void </span><span style="color:#dcdcdc;">do_stuff(</span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person</span><span style="color:#569cd6;">* </span><span style="color:#dcdcdc;">person) {
+  printf(</span><span style="color:#d69d85;">&quot;</span><span style="color:#b4cea8;">%d</span><span style="color:#d69d85;">&quot;</span><span style="color:#dcdcdc;">, person-&gt;age);
+}
+
+</span><span style="color:#569cd6;">int </span><span style="color:#dcdcdc;">main() {
+  </span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person</span><span style="color:#569cd6;">*</span><span style="color:#dcdcdc;"> p = create_person();
+  do_stuff(p);
+  </span><span style="color:#608b4e;">// almost finished
+  </span><span style="color:#dcdcdc;">free(p);
+  </span><span style="color:#569cd6;">return </span><span style="color:#b5cea8;">0</span><span style="color:#dcdcdc;">;
+}
+</span></pre>
+<p>The high-level behavior of this program is the same as the previous one, but now the functions deal with pointers to <code>struct Person</code>, this basically means that instead of copying a whole struct instance while returning from <code>create_person</code> or passing an argument to <code>do_stuff</code>, what is really copied is the pointer value, an address, which is represented by an integer in virtually all compilers and systems, so that's a really cheap operation.</p>
+<p>It seems now that the problem with expensive copying has been overcome, but this approach has some disadvantages:</p>
+<ol>
+<li>
+<p>Memory management is now fully manual: the compiler can't help us keep track of the memory consumed by the program so for every explicit allocation request with <code>malloc</code> there must be an explicit deallocation request with <code>free</code>. Also if we reach the situation where there are no pointers to some memory we previously allocated then we have no way to free it anymore and we have caused what is widely known as a <strong>memory leak</strong>.</p>
+</li>
+<li>
+<p>We have to make sure that all of our pointers actually contain valid addresses: for example, after the call to <code>free</code>, <code>p</code> is a <strong>dangling pointer</strong>, i.e., it points to invalid memory and using it from that point on could lead to <strong>undefined behavior</strong> or a <a href="https://en.wikipedia.org/wiki/Segmentation_fault">segmentation fault</a>.</p>
+</li>
+</ol>
+<p>To mitigate these issues, many languages, like Java, Python and Go, use some form of <strong>garbage collection</strong>. They provide enriched runtime environments which include a <strong>garbage collector</strong>, that runs alongside our code in order to detect which regions of the heap contain objects <em>not</em> referenced by any variable so that it can proceed to free this memory automatically.</p>
+<p>Garbage collectors are a great solution to memory management problems provided that you can afford such a runtime environment. For example, the reference implementation of the Java virtual machine uses a <strong>stop-the-world</strong> garbage collector, which basically means that it stops the running program to perform the garbage collection and this wait may be unacceptable for certain applications. Also, these runtime environments may be too resource-consuming or otherwise inappropriate for some types of embedded or real-time systems.</p>
+<h1 id="the-rust-y-way">The Rust(y) way</h1>
+<p>Rust provides no runtime environment apart from it's standard library which puts it closer to how C and C++ work. To address these issues without such an environment, Rust uses two powerful concepts that were introduced by the C++ community: <strong>Move Semantics</strong> and <strong>Scope-Based Resource Management</strong>. One of Rust's novelties comes from backing up these two with its type system. Let's look at some examples.</p>
+<h2 id="move-semantics">Move Semantics</h2>
+<p>Before we begin, let's talk about the concept of ownership in Rust: all objects have one and only one owner. When we write something like</p>
+<pre style="background-color:#1e1e1e;">
+<span style="color:#569cd6;">struct </span><span style="color:#dcdcdc;">Person {
+  age: </span><span style="color:#569cd6;">u32
+</span><span style="color:#dcdcdc;">}
+
+</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">main() {
+  </span><span style="color:#569cd6;">let</span><span style="color:#dcdcdc;"> a </span><span style="color:#569cd6;">=</span><span style="color:#dcdcdc;"> Person { age: </span><span style="color:#b5cea8;">36 </span><span style="color:#dcdcdc;">};
+  </span><span style="color:#569cd6;">let</span><span style="color:#dcdcdc;"> b </span><span style="color:#569cd6;">=</span><span style="color:#dcdcdc;"> a;
+  println!(</span><span style="color:#d69d85;">&quot;</span><span style="color:#b4cea8;">{}</span><span style="color:#d69d85;">&quot;</span><span style="color:#dcdcdc;">, a.age);
+}
+</span></pre>
+<p>we are constructing a <code>Person</code> object an assigning it to <code>a</code>, this means that <code>a</code> is the owner of said object. However when we assign <code>a</code> to <code>b</code>, we are moving the ownership of that same object to variable <code>b</code>. Because of that, we cannot access it from a anymore, so that <code>println!</code> line is actually invalid. Indeed, if we try compiling this code we get the following error:</p>
+<pre style="background-color:#1e1e1e;">
+<span style="color:#dcdcdc;">error[E0382]: borrow of moved value: `a`
+ --&gt; src/main.rs:8:20
+ 
+... snip ...
+
+7 |     let b = a;
+  |             - value moved here
+8 |     println!(&quot;{}&quot;, a.age);
+  |                    ^^^^^ value borrowed here after move
+
+error: aborting due to previous error
+</span></pre>
+<p>The compiler is basically telling us that we are <em>borrowing</em> after we have moved the value from <code>a</code>. We'll see what borrowing means another time, but for now think of it as a way to access an object.</p>
+<p>Now let's apply this to our original context. We can translate our first piece of code from C to Rust in a really straightforward manner:</p>
+<pre style="background-color:#1e1e1e;">
+<span style="color:#569cd6;">struct </span><span style="color:#dcdcdc;">Person {
+  age: </span><span style="color:#569cd6;">u32
+</span><span style="color:#dcdcdc;">}
+
+</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">create_person() -&gt; Person {
+  </span><span style="color:#569cd6;">return</span><span style="color:#dcdcdc;"> Person { age: </span><span style="color:#b5cea8;">25 </span><span style="color:#dcdcdc;">}; </span><span style="color:#608b4e;">// &quot;return&quot; and &quot;;&quot; are superfluous here
+</span><span style="color:#dcdcdc;">}
+
+</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">do_stuff(person: Person) {
+  println!(</span><span style="color:#d69d85;">&quot;</span><span style="color:#b4cea8;">{}</span><span style="color:#d69d85;">&quot;</span><span style="color:#dcdcdc;">, person.age);
+}
+
+</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">main() {
+  </span><span style="color:#569cd6;">let</span><span style="color:#dcdcdc;"> p </span><span style="color:#569cd6;">= </span><span style="color:#dcdcdc;">create_person();
+  do_stuff(p);
+}
+</span></pre>
+<p>Again, this program has the same overall behavior the original in C, but let's take a closer look. Instead of copying arguments, Rust defaults to <strong>moving</strong> their ownership, and the same applies to assignments and return values. So the steps here are roughly as follows: we call <code>create_person</code> which constructs a <code>Person</code> object, so it has an implicit owner that is bound to <code>create_person</code>'s scope (and stack frame). But it's immediately returned, so its ownership is moved to the caller, <code>main</code>, which moves said ownership to variable <code>p</code>.</p>
+<p>Now, there's a call to <code>do_stuff</code> and we're passing <code>p</code> as an argument, thus moving the ownership from <code>p</code> to the <code>person</code> parameter on <code>do_stuff</code>. There we access it's age field and print it.</p>
+<p>Some points are worth noting:</p>
+<ol>
+<li>
+<p>Given that the ownership of the object originally in <code>p</code> was moved from it after the call to <code>do_stuff</code>, we can no longer access it through <code>p</code> on <code>main</code> and this is guaranteed by the compiler. <strong>This is Move Semantics in action!</strong></p>
+</li>
+<li>
+<p>Since this same object is now owned solely by a parameter that is on <code>do_stuff</code>'s scope, when execution reaches the end of that scope, Rust compiler knows that it can free it's memory, since no one else can use it. <strong>This is Scope-Based Resource Management in action!</strong></p>
+</li>
+<li>
+<p>The same stack pushing and popping we described on the C version applies here, and even though the ownership moves around, the values itself may need copying because they may be living in some stack frame that is getting popped.</p>
+</li>
+</ol>
+<p>Point 1 may not seem like a big deal with such a simple example, but besides it's computational properties, being enforced by the compiler provides very interesting mathematical properties about programs and these properties can be used by the compiler to perform optimizations and &quot;prove&quot; the correctness of the code, specially regarding general resource usage. For the mathematically inclined (like me <code>:)</code>), Rust compiler actually implements what's called an <strong>affine type system</strong> which is a kind of <strong>affine logic</strong>.</p>
+<p>Scope-Based Resource Management is traditionally called <strong>Resource acquisition is initialization (RAII)</strong>, which doesn't really convey much about the concept.</p>
+<p>We still have a small problem though: point 3 indicates that there's some copying involved and this bears some of the issues we originally had in C. But that's because we haven't used the heap in Rust yet and luckily we can make use of it with a pretty simple change to our current code:</p>
+<pre style="background-color:#1e1e1e;">
+<span style="color:#569cd6;">struct </span><span style="color:#dcdcdc;">Person {
+  age: </span><span style="color:#569cd6;">u32
+</span><span style="color:#dcdcdc;">}
+
+</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">create_person() -&gt; Person {
+  </span><span style="color:#569cd6;">return</span><span style="color:#dcdcdc;"> Person { age: </span><span style="color:#b5cea8;">25 </span><span style="color:#dcdcdc;">}; </span><span style="color:#608b4e;">// &quot;return&quot; and &quot;;&quot; are superfluous here
+</span><span style="color:#dcdcdc;">}
+
+</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">do_stuff(person: Box&lt;Person&gt;) {
+  println!(</span><span style="color:#d69d85;">&quot;</span><span style="color:#b4cea8;">{}</span><span style="color:#d69d85;">&quot;</span><span style="color:#dcdcdc;">, person.age);
+}
+
+</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">main() {
+  </span><span style="color:#569cd6;">let</span><span style="color:#dcdcdc;"> p </span><span style="color:#569cd6;">= </span><span style="color:#dcdcdc;">Box::new(create_person());
+  do_stuff(p);
+}
+</span></pre>
+<p>Boxes are the simplest way to allocate objects on the heap in Rust. Here we just used its <code>new</code> function to create a <code>Box&lt;Person&gt;</code> instance with the <code>Person</code> object returned by <code>create_person</code>, which at this point is on the heap and owned by said box (the box itself is on the stack since it's owned by the variable <code>p</code>). We also changed <code>do_stuff</code>'s signature to take a <code>Box&lt;Person&gt;</code> parameter.</p>
+<p>When we call <code>do_stuff</code> passing the box <code>p</code> as an argument, its ownership is moved to the <code>person</code> parameter, but it still points to the same <code>Person</code> object on the heap, so there's no copying there. The call may cause a copy of the box itself, but it's a very lightweight object, analogous to copying a pointer in C in our second code listing.</p>
+<p>The advantage here is that point 2 from above still applies to this case: when execution reaches the end of <code>do_stuff</code>, the compiler knows that <code>person</code> is the unique owner of the box, so it can deallocate it's memory since no one's using it anymore. However, before deallocating the box, there's an implicit call to the box's <code>drop</code> method (which works as a destructor in Rust) and in the case of the <code>Box</code> type, <code>drop</code> just deallocates the memory it points to on the heap. And there it is! We finally solved our problems.</p>
+<p>This call to <code>drop</code> is generated by the compiler for any type that implements the <code>Drop</code> <strong>trait</strong> (think improved interface) as a way to enforce Scope-Based Resource Management. In particular, one could say that Rust implements a kind of <strong>compile-time garbage collection</strong>.</p>
+<p>But it's much more than that! Despite our example, this process does not apply only to memory, but also to any kind of resource that requires some sort of acquisition and release, like files, sockets, database connections, mutexes, etc. Each of these has a constructor that knows how to allocate the respective resource, and also implements <code>drop</code> to specify how to deallocate that same resource. Therefore, whenever you need one of them, just call its constructor, then pass the object around to do some work and let the compiler figure out when to drop it. You can even implement your own resources by following the same <em>protocol</em>.</p>
+<p>That's it for this post. I intend to write on other Rust features very soon.</p>
+<h1 id="references-and-further-reading">References and further reading</h1>
+<ul>
+<li>
+<p><a href="https://doc.rust-lang.org/book/">https://doc.rust-lang.org/book/</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)">https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization">https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization</a></p>
+</li>
+<li>
+<p><a href="https://stackoverflow.com/questions/2321511/what-is-meant-by-resource-acquisition-is-initialization-raii">https://stackoverflow.com/questions/2321511/what-is-meant-by-resource-acquisition-is-initialization-raii</a></p>
+</li>
+<li>
+<p><a href="https://stackoverflow.com/questions/16695874/why-does-the-jvm-full-gc-need-to-stop-the-world">https://stackoverflow.com/questions/16695874/why-does-the-jvm-full-gc-need-to-stop-the-world</a></p>
+</li>
+</ul>
+
+</div>
+
+        </div>
+
+    </body>
+
+</html>
