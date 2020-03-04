@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: https://cesar-barata.github.io/sitemap.xml
+Sitemap: https://cesarb.org/sitemap.xml
