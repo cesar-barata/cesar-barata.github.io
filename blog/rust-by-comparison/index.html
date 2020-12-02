@@ -27,7 +27,7 @@
 
     </head>
 
-    <body class=" layout-reverse">
+    <body class="theme-base-08 layout-reverse">
         
 <div class="sidebar">
     <div class="container sidebar-sticky">
@@ -47,15 +47,13 @@
             
             <li class="sidebar-nav-item"><a href="&#x2F;blog">Blog</a></li>
             
-            <li class="sidebar-nav-item"><a href="&#x2F;projects">My Projects</a></li>
-            
             <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;github.com&#x2F;cesar-barata">GitHub</a></li>
             
             <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;cesarbarata">LinkedIn</a></li>
             
             
             <br>
-            Copyright © 2019
+            Copyright © 2020
         </ul>
     </div>
 </div>
@@ -74,30 +72,30 @@
 <p>We know that operating systems generally divide a process's memory into regions that have different purposes. Here we are mostly interested in the <strong>stack</strong> and the <strong>heap</strong>, since they're the ones providing storage to a running process.</p>
 <h2 id="the-stack">The stack</h2>
 <p>To see how these regions relate to memory management, consider the following C code:</p>
-<pre style="background-color:#1e1e1e;">
-<span style="color:#9b9b9b;">#include </span><span style="color:#d69d85;">&lt;stdio.h&gt;
+<pre style="background-color:#393939;">
+<code class="language-c"><span style="background-color:#2b303b;color:#b48ead;">#include </span><span style="background-color:#2b303b;color:#c0c5ce;">&lt;</span><span style="background-color:#2b303b;color:#a3be8c;">stdio.h</span><span style="background-color:#2b303b;color:#c0c5ce;">&gt;
 
-</span><span style="color:#569cd6;">struct </span><span style="color:#dcdcdc;">Person {
-  </span><span style="color:#569cd6;">unsigned int</span><span style="color:#dcdcdc;"> age;
+</span><span style="background-color:#2b303b;color:#b48ead;">struct </span><span style="background-color:#2b303b;color:#c0c5ce;">Person {
+  </span><span style="background-color:#2b303b;color:#b48ead;">unsigned int</span><span style="background-color:#2b303b;color:#c0c5ce;"> age;
 };
 
-</span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person create_person() {
-  </span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person new_person;
-  new_person.age = </span><span style="color:#b5cea8;">25</span><span style="color:#dcdcdc;">;
-  </span><span style="color:#569cd6;">return</span><span style="color:#dcdcdc;"> new_person;
+</span><span style="background-color:#2b303b;color:#b48ead;">struct</span><span style="background-color:#2b303b;color:#c0c5ce;"> Person </span><span style="background-color:#2b303b;color:#8fa1b3;">create_person</span><span style="background-color:#2b303b;color:#c0c5ce;">() {
+  </span><span style="background-color:#2b303b;color:#b48ead;">struct</span><span style="background-color:#2b303b;color:#c0c5ce;"> Person new_person;
+  new_person.</span><span style="background-color:#2b303b;color:#bf616a;">age </span><span style="background-color:#2b303b;color:#c0c5ce;">= </span><span style="background-color:#2b303b;color:#d08770;">25</span><span style="background-color:#2b303b;color:#c0c5ce;">;
+  </span><span style="background-color:#2b303b;color:#b48ead;">return</span><span style="background-color:#2b303b;color:#c0c5ce;"> new_person;
 }
 
-</span><span style="color:#569cd6;">void </span><span style="color:#dcdcdc;">do_stuff(</span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person person) {
-  printf(</span><span style="color:#d69d85;">&quot;</span><span style="color:#b4cea8;">%d</span><span style="color:#d69d85;">&quot;</span><span style="color:#dcdcdc;">, person.age);
+</span><span style="background-color:#2b303b;color:#b48ead;">void </span><span style="background-color:#2b303b;color:#8fa1b3;">do_stuff</span><span style="background-color:#2b303b;color:#c0c5ce;">(</span><span style="background-color:#2b303b;color:#b48ead;">struct</span><span style="background-color:#2b303b;color:#c0c5ce;"> Person </span><span style="background-color:#2b303b;color:#bf616a;">person</span><span style="background-color:#2b303b;color:#c0c5ce;">) {
+  </span><span style="background-color:#2b303b;color:#96b5b4;">printf</span><span style="background-color:#2b303b;color:#c0c5ce;">(&quot;</span><span style="background-color:#2b303b;color:#d08770;">%d</span><span style="background-color:#2b303b;color:#c0c5ce;">&quot;, person.</span><span style="background-color:#2b303b;color:#bf616a;">age</span><span style="background-color:#2b303b;color:#c0c5ce;">);
 }
 
-</span><span style="color:#569cd6;">int </span><span style="color:#dcdcdc;">main() {
-  </span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person p = create_person();
-  do_stuff(p);
-  </span><span style="color:#608b4e;">// almost finished
-  </span><span style="color:#569cd6;">return </span><span style="color:#b5cea8;">0</span><span style="color:#dcdcdc;">;
+</span><span style="background-color:#2b303b;color:#b48ead;">int </span><span style="background-color:#2b303b;color:#8fa1b3;">main</span><span style="background-color:#2b303b;color:#c0c5ce;">() {
+  </span><span style="background-color:#2b303b;color:#b48ead;">struct</span><span style="background-color:#2b303b;color:#c0c5ce;"> Person p = </span><span style="background-color:#2b303b;color:#bf616a;">create_person</span><span style="background-color:#2b303b;color:#c0c5ce;">();
+  </span><span style="background-color:#2b303b;color:#bf616a;">do_stuff</span><span style="background-color:#2b303b;color:#c0c5ce;">(p);
+  </span><span style="background-color:#2b303b;color:#65737e;">// almost finished
+  </span><span style="background-color:#2b303b;color:#b48ead;">return </span><span style="background-color:#2b303b;color:#d08770;">0</span><span style="background-color:#2b303b;color:#c0c5ce;">;
 }
-</span></pre>
+</span></code></pre>
 <p>The execution steps for this code go roughly as follows: starting at the <code>main</code> function, a variable <code>p</code> of type <code>struct Person</code> is declared, so that we have a corresponding allocation for its storage on <code>main</code>'s stack frame on the stack (obviously), with enough space to store said struct.</p>
 <p>Then <code>create_person</code> is called to initialize <code>p</code>, which creates a stack frame on top of <code>main</code>'s frame. Inside <code>create_person</code>, we have yet another declaration for a <code>struct Person</code> variable, <code>new_person</code>, so we get some space for it on <code>create_person</code>'s stack frame and then write <code>25</code> to its <code>age</code> field. After that, execution returns <code>new_person</code>'s value to the caller, in this case <code>main</code>, and deallocate all space used by the variables on <code>create_person</code>'s frame and pop it from the stack.</p>
 <p>By standard C semantics for assignments, argument passing and return values, <code>new_person</code>'s value is <strong>copied</strong> from <code>create_person</code>'s stack frame space to <code>main</code>'s frame, specifically to the space corresponding to <code>p</code>. For structs, this means copying each field, which can be really expensive.</p>
@@ -107,33 +105,33 @@
 <p>Let's call this copying behavior <strong>Copy Semantics</strong> (not standard terminology). As I mentioned before, this can be really computationally expensive, for example, if we have a huge struct that is passed around a lot.</p>
 <h2 id="the-heap">The heap</h2>
 <p>C programmers know that all this copying can be avoided by using pointers and manual memory allocation on the heap. For instance, we can modify the code from before to look like this:</p>
-<pre style="background-color:#1e1e1e;">
-<span style="color:#9b9b9b;">#include </span><span style="color:#d69d85;">&lt;stdio.h&gt;
-</span><span style="color:#9b9b9b;">#include </span><span style="color:#d69d85;">&lt;stdlib.h&gt;
+<pre style="background-color:#393939;">
+<code class="language-c"><span style="background-color:#2b303b;color:#b48ead;">#include </span><span style="background-color:#2b303b;color:#c0c5ce;">&lt;</span><span style="background-color:#2b303b;color:#a3be8c;">stdio.h</span><span style="background-color:#2b303b;color:#c0c5ce;">&gt;
+</span><span style="background-color:#2b303b;color:#b48ead;">#include </span><span style="background-color:#2b303b;color:#c0c5ce;">&lt;</span><span style="background-color:#2b303b;color:#a3be8c;">stdlib.h</span><span style="background-color:#2b303b;color:#c0c5ce;">&gt;
 
-</span><span style="color:#569cd6;">struct </span><span style="color:#dcdcdc;">Person {
-  </span><span style="color:#569cd6;">unsigned int</span><span style="color:#dcdcdc;"> age;
+</span><span style="background-color:#2b303b;color:#b48ead;">struct </span><span style="background-color:#2b303b;color:#c0c5ce;">Person {
+  </span><span style="background-color:#2b303b;color:#b48ead;">unsigned int</span><span style="background-color:#2b303b;color:#c0c5ce;"> age;
 };
 
-</span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person</span><span style="color:#569cd6;">* </span><span style="color:#dcdcdc;">create_person() {
-  </span><span style="color:#608b4e;">// malloc may fail by returning NULL, but let&#39;s ignore it for simplicity
-  </span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person</span><span style="color:#569cd6;">*</span><span style="color:#dcdcdc;"> new_person = malloc(</span><span style="color:#569cd6;">sizeof</span><span style="color:#dcdcdc;">(</span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person));
-  new_person-&gt;age = </span><span style="color:#b5cea8;">25</span><span style="color:#dcdcdc;">;
-  </span><span style="color:#569cd6;">return</span><span style="color:#dcdcdc;"> new_person;
+</span><span style="background-color:#2b303b;color:#b48ead;">struct</span><span style="background-color:#2b303b;color:#c0c5ce;"> Person* </span><span style="background-color:#2b303b;color:#8fa1b3;">create_person</span><span style="background-color:#2b303b;color:#c0c5ce;">() {
+  </span><span style="background-color:#2b303b;color:#65737e;">// malloc may fail by returning NULL, but let&#39;s ignore it for simplicity
+  </span><span style="background-color:#2b303b;color:#b48ead;">struct</span><span style="background-color:#2b303b;color:#c0c5ce;"> Person* new_person = </span><span style="background-color:#2b303b;color:#96b5b4;">malloc</span><span style="background-color:#2b303b;color:#c0c5ce;">(sizeof(</span><span style="background-color:#2b303b;color:#b48ead;">struct</span><span style="background-color:#2b303b;color:#c0c5ce;"> Person));
+  new_person-&gt;age = </span><span style="background-color:#2b303b;color:#d08770;">25</span><span style="background-color:#2b303b;color:#c0c5ce;">;
+  </span><span style="background-color:#2b303b;color:#b48ead;">return</span><span style="background-color:#2b303b;color:#c0c5ce;"> new_person;
 }
 
-</span><span style="color:#569cd6;">void </span><span style="color:#dcdcdc;">do_stuff(</span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person</span><span style="color:#569cd6;">* </span><span style="color:#dcdcdc;">person) {
-  printf(</span><span style="color:#d69d85;">&quot;</span><span style="color:#b4cea8;">%d</span><span style="color:#d69d85;">&quot;</span><span style="color:#dcdcdc;">, person-&gt;age);
+</span><span style="background-color:#2b303b;color:#b48ead;">void </span><span style="background-color:#2b303b;color:#8fa1b3;">do_stuff</span><span style="background-color:#2b303b;color:#c0c5ce;">(</span><span style="background-color:#2b303b;color:#b48ead;">struct</span><span style="background-color:#2b303b;color:#c0c5ce;"> Person* </span><span style="background-color:#2b303b;color:#bf616a;">person</span><span style="background-color:#2b303b;color:#c0c5ce;">) {
+  </span><span style="background-color:#2b303b;color:#96b5b4;">printf</span><span style="background-color:#2b303b;color:#c0c5ce;">(&quot;</span><span style="background-color:#2b303b;color:#d08770;">%d</span><span style="background-color:#2b303b;color:#c0c5ce;">&quot;, person-&gt;age);
 }
 
-</span><span style="color:#569cd6;">int </span><span style="color:#dcdcdc;">main() {
-  </span><span style="color:#569cd6;">struct</span><span style="color:#dcdcdc;"> Person</span><span style="color:#569cd6;">*</span><span style="color:#dcdcdc;"> p = create_person();
-  do_stuff(p);
-  </span><span style="color:#608b4e;">// almost finished
-  </span><span style="color:#dcdcdc;">free(p);
-  </span><span style="color:#569cd6;">return </span><span style="color:#b5cea8;">0</span><span style="color:#dcdcdc;">;
+</span><span style="background-color:#2b303b;color:#b48ead;">int </span><span style="background-color:#2b303b;color:#8fa1b3;">main</span><span style="background-color:#2b303b;color:#c0c5ce;">() {
+  </span><span style="background-color:#2b303b;color:#b48ead;">struct</span><span style="background-color:#2b303b;color:#c0c5ce;"> Person* p = </span><span style="background-color:#2b303b;color:#bf616a;">create_person</span><span style="background-color:#2b303b;color:#c0c5ce;">();
+  </span><span style="background-color:#2b303b;color:#bf616a;">do_stuff</span><span style="background-color:#2b303b;color:#c0c5ce;">(p);
+  </span><span style="background-color:#2b303b;color:#65737e;">// almost finished
+  </span><span style="background-color:#2b303b;color:#96b5b4;">free</span><span style="background-color:#2b303b;color:#c0c5ce;">(p);
+  </span><span style="background-color:#2b303b;color:#b48ead;">return </span><span style="background-color:#2b303b;color:#d08770;">0</span><span style="background-color:#2b303b;color:#c0c5ce;">;
 }
-</span></pre>
+</span></code></pre>
 <p>The high-level behavior of this program is the same as the previous one, but now the functions deal with pointers to <code>struct Person</code>, this basically means that instead of copying a whole struct instance while returning from <code>create_person</code> or passing an argument to <code>do_stuff</code>, what is really copied is the pointer value, an address, which is represented by an integer in virtually all compilers and systems, so that's a really cheap operation.</p>
 <p>It seems now that the problem with expensive copying has been overcome, but this approach has some disadvantages:</p>
 <ol>
@@ -150,20 +148,20 @@
 <p>Rust provides no runtime environment apart from it's standard library which puts it closer to how C and C++ work. To address these issues without such an environment, Rust uses two powerful concepts that were introduced by the C++ community: <strong>Move Semantics</strong> and <strong>Scope-Based Resource Management</strong>. One of Rust's novelties comes from backing up these two with its type system. Let's look at some examples.</p>
 <h2 id="move-semantics">Move Semantics</h2>
 <p>Before we begin, let's talk about the concept of ownership in Rust: all objects have one and only one owner. When we write something like</p>
-<pre style="background-color:#1e1e1e;">
-<span style="color:#569cd6;">struct </span><span style="color:#dcdcdc;">Person {
-  age: </span><span style="color:#569cd6;">u32
-</span><span style="color:#dcdcdc;">}
+<pre style="background-color:#393939;">
+<code class="language-rust"><span style="background-color:#2b303b;color:#b48ead;">struct </span><span style="background-color:#2b303b;color:#c0c5ce;">Person {
+  </span><span style="background-color:#2b303b;color:#bf616a;">age</span><span style="background-color:#2b303b;color:#c0c5ce;">: </span><span style="background-color:#2b303b;color:#b48ead;">u32
+</span><span style="background-color:#2b303b;color:#c0c5ce;">}
 
-</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">main() {
-  </span><span style="color:#569cd6;">let</span><span style="color:#dcdcdc;"> a </span><span style="color:#569cd6;">=</span><span style="color:#dcdcdc;"> Person { age: </span><span style="color:#b5cea8;">36 </span><span style="color:#dcdcdc;">};
-  </span><span style="color:#569cd6;">let</span><span style="color:#dcdcdc;"> b </span><span style="color:#569cd6;">=</span><span style="color:#dcdcdc;"> a;
-  println!(</span><span style="color:#d69d85;">&quot;</span><span style="color:#b4cea8;">{}</span><span style="color:#d69d85;">&quot;</span><span style="color:#dcdcdc;">, a.age);
+</span><span style="background-color:#2b303b;color:#b48ead;">fn </span><span style="background-color:#2b303b;color:#8fa1b3;">main</span><span style="background-color:#2b303b;color:#c0c5ce;">() {
+  </span><span style="background-color:#2b303b;color:#b48ead;">let</span><span style="background-color:#2b303b;color:#c0c5ce;"> a = Person { age: </span><span style="background-color:#2b303b;color:#d08770;">36 </span><span style="background-color:#2b303b;color:#c0c5ce;">};
+  </span><span style="background-color:#2b303b;color:#b48ead;">let</span><span style="background-color:#2b303b;color:#c0c5ce;"> b = a;
+  println!(&quot;</span><span style="background-color:#2b303b;color:#d08770;">{}</span><span style="background-color:#2b303b;color:#c0c5ce;">&quot;, a.age);
 }
-</span></pre>
+</span></code></pre>
 <p>we are constructing a <code>Person</code> object an assigning it to <code>a</code>, this means that <code>a</code> is the owner of said object. However when we assign <code>a</code> to <code>b</code>, we are moving the ownership of that same object to variable <code>b</code>. Because of that, we cannot access it from a anymore, so that <code>println!</code> line is actually invalid. Indeed, if we try compiling this code we get the following error:</p>
-<pre style="background-color:#1e1e1e;">
-<span style="color:#dcdcdc;">error[E0382]: borrow of moved value: `a`
+<pre style="background-color:#393939;">
+<code><span style="background-color:#2b303b;color:#c0c5ce;">error[E0382]: borrow of moved value: `a`
  --&gt; src/main.rs:8:20
  
 ... snip ...
@@ -174,27 +172,27 @@
   |                    ^^^^^ value borrowed here after move
 
 error: aborting due to previous error
-</span></pre>
+</span></code></pre>
 <p>The compiler is basically telling us that we are <em>borrowing</em> after we have moved the value from <code>a</code>. We'll see what borrowing means another time, but for now think of it as a way to access an object.</p>
 <p>Now let's apply this to our original context. We can translate our first piece of code from C to Rust in a really straightforward manner:</p>
-<pre style="background-color:#1e1e1e;">
-<span style="color:#569cd6;">struct </span><span style="color:#dcdcdc;">Person {
-  age: </span><span style="color:#569cd6;">u32
-</span><span style="color:#dcdcdc;">}
+<pre style="background-color:#393939;">
+<code class="language-rust"><span style="background-color:#2b303b;color:#b48ead;">struct </span><span style="background-color:#2b303b;color:#c0c5ce;">Person {
+  </span><span style="background-color:#2b303b;color:#bf616a;">age</span><span style="background-color:#2b303b;color:#c0c5ce;">: </span><span style="background-color:#2b303b;color:#b48ead;">u32
+</span><span style="background-color:#2b303b;color:#c0c5ce;">}
 
-</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">create_person() -&gt; Person {
-  </span><span style="color:#569cd6;">return</span><span style="color:#dcdcdc;"> Person { age: </span><span style="color:#b5cea8;">25 </span><span style="color:#dcdcdc;">}; </span><span style="color:#608b4e;">// &quot;return&quot; and &quot;;&quot; are superfluous here
-</span><span style="color:#dcdcdc;">}
+</span><span style="background-color:#2b303b;color:#b48ead;">fn </span><span style="background-color:#2b303b;color:#8fa1b3;">create_person</span><span style="background-color:#2b303b;color:#c0c5ce;">() -&gt; Person {
+  </span><span style="background-color:#2b303b;color:#b48ead;">return</span><span style="background-color:#2b303b;color:#c0c5ce;"> Person { age: </span><span style="background-color:#2b303b;color:#d08770;">25 </span><span style="background-color:#2b303b;color:#c0c5ce;">}; </span><span style="background-color:#2b303b;color:#65737e;">// &quot;return&quot; and &quot;;&quot; are superfluous here
+</span><span style="background-color:#2b303b;color:#c0c5ce;">}
 
-</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">do_stuff(person: Person) {
-  println!(</span><span style="color:#d69d85;">&quot;</span><span style="color:#b4cea8;">{}</span><span style="color:#d69d85;">&quot;</span><span style="color:#dcdcdc;">, person.age);
+</span><span style="background-color:#2b303b;color:#b48ead;">fn </span><span style="background-color:#2b303b;color:#8fa1b3;">do_stuff</span><span style="background-color:#2b303b;color:#c0c5ce;">(</span><span style="background-color:#2b303b;color:#bf616a;">person</span><span style="background-color:#2b303b;color:#c0c5ce;">: Person) {
+  println!(&quot;</span><span style="background-color:#2b303b;color:#d08770;">{}</span><span style="background-color:#2b303b;color:#c0c5ce;">&quot;, person.age);
 }
 
-</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">main() {
-  </span><span style="color:#569cd6;">let</span><span style="color:#dcdcdc;"> p </span><span style="color:#569cd6;">= </span><span style="color:#dcdcdc;">create_person();
-  do_stuff(p);
+</span><span style="background-color:#2b303b;color:#b48ead;">fn </span><span style="background-color:#2b303b;color:#8fa1b3;">main</span><span style="background-color:#2b303b;color:#c0c5ce;">() {
+  </span><span style="background-color:#2b303b;color:#b48ead;">let</span><span style="background-color:#2b303b;color:#c0c5ce;"> p = </span><span style="background-color:#2b303b;color:#96b5b4;">create_person</span><span style="background-color:#2b303b;color:#c0c5ce;">();
+  </span><span style="background-color:#2b303b;color:#96b5b4;">do_stuff</span><span style="background-color:#2b303b;color:#c0c5ce;">(p);
 }
-</span></pre>
+</span></code></pre>
 <p>Again, this program has the same overall behavior the original in C, but let's take a closer look. Instead of copying arguments, Rust defaults to <strong>moving</strong> their ownership, and the same applies to assignments and return values. So the steps here are roughly as follows: we call <code>create_person</code> which constructs a <code>Person</code> object, so it has an implicit owner that is bound to <code>create_person</code>'s scope (and stack frame). But it's immediately returned, so its ownership is moved to the caller, <code>main</code>, which moves said ownership to variable <code>p</code>.</p>
 <p>Now, there's a call to <code>do_stuff</code> and we're passing <code>p</code> as an argument, thus moving the ownership from <code>p</code> to the <code>person</code> parameter on <code>do_stuff</code>. There we access it's age field and print it.</p>
 <p>Some points are worth noting:</p>
@@ -212,24 +210,24 @@ error: aborting due to previous error
 <p>Point 1 may not seem like a big deal with such a simple example, but besides it's computational properties, being enforced by the compiler provides very interesting mathematical properties about programs and these properties can be used by the compiler to perform optimizations and &quot;prove&quot; the correctness of the code, specially regarding general resource usage. For the mathematically inclined (like me <code>:)</code>), Rust compiler actually implements what's called an <strong>affine type system</strong> which is a kind of <strong>affine logic</strong>.</p>
 <p>Scope-Based Resource Management is traditionally called <strong>Resource acquisition is initialization (RAII)</strong>, which doesn't really convey much about the concept.</p>
 <p>We still have a small problem though: point 3 indicates that there's some copying involved and this bears some of the issues we originally had in C. But that's because we haven't used the heap in Rust yet and luckily we can make use of it with a pretty simple change to our current code:</p>
-<pre style="background-color:#1e1e1e;">
-<span style="color:#569cd6;">struct </span><span style="color:#dcdcdc;">Person {
-  age: </span><span style="color:#569cd6;">u32
-</span><span style="color:#dcdcdc;">}
+<pre style="background-color:#393939;">
+<code class="language-rust"><span style="background-color:#2b303b;color:#b48ead;">struct </span><span style="background-color:#2b303b;color:#c0c5ce;">Person {
+  </span><span style="background-color:#2b303b;color:#bf616a;">age</span><span style="background-color:#2b303b;color:#c0c5ce;">: </span><span style="background-color:#2b303b;color:#b48ead;">u32
+</span><span style="background-color:#2b303b;color:#c0c5ce;">}
 
-</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">create_person() -&gt; Person {
-  </span><span style="color:#569cd6;">return</span><span style="color:#dcdcdc;"> Person { age: </span><span style="color:#b5cea8;">25 </span><span style="color:#dcdcdc;">}; </span><span style="color:#608b4e;">// &quot;return&quot; and &quot;;&quot; are superfluous here
-</span><span style="color:#dcdcdc;">}
+</span><span style="background-color:#2b303b;color:#b48ead;">fn </span><span style="background-color:#2b303b;color:#8fa1b3;">create_person</span><span style="background-color:#2b303b;color:#c0c5ce;">() -&gt; Person {
+  </span><span style="background-color:#2b303b;color:#b48ead;">return</span><span style="background-color:#2b303b;color:#c0c5ce;"> Person { age: </span><span style="background-color:#2b303b;color:#d08770;">25 </span><span style="background-color:#2b303b;color:#c0c5ce;">}; </span><span style="background-color:#2b303b;color:#65737e;">// &quot;return&quot; and &quot;;&quot; are superfluous here
+</span><span style="background-color:#2b303b;color:#c0c5ce;">}
 
-</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">do_stuff(person: Box&lt;Person&gt;) {
-  println!(</span><span style="color:#d69d85;">&quot;</span><span style="color:#b4cea8;">{}</span><span style="color:#d69d85;">&quot;</span><span style="color:#dcdcdc;">, person.age);
+</span><span style="background-color:#2b303b;color:#b48ead;">fn </span><span style="background-color:#2b303b;color:#8fa1b3;">do_stuff</span><span style="background-color:#2b303b;color:#c0c5ce;">(</span><span style="background-color:#2b303b;color:#bf616a;">person</span><span style="background-color:#2b303b;color:#c0c5ce;">: Box&lt;Person&gt;) {
+  println!(&quot;</span><span style="background-color:#2b303b;color:#d08770;">{}</span><span style="background-color:#2b303b;color:#c0c5ce;">&quot;, person.age);
 }
 
-</span><span style="color:#569cd6;">fn </span><span style="color:#dcdcdc;">main() {
-  </span><span style="color:#569cd6;">let</span><span style="color:#dcdcdc;"> p </span><span style="color:#569cd6;">= </span><span style="color:#dcdcdc;">Box::new(create_person());
-  do_stuff(p);
+</span><span style="background-color:#2b303b;color:#b48ead;">fn </span><span style="background-color:#2b303b;color:#8fa1b3;">main</span><span style="background-color:#2b303b;color:#c0c5ce;">() {
+  </span><span style="background-color:#2b303b;color:#b48ead;">let</span><span style="background-color:#2b303b;color:#c0c5ce;"> p = Box::new(</span><span style="background-color:#2b303b;color:#96b5b4;">create_person</span><span style="background-color:#2b303b;color:#c0c5ce;">());
+  </span><span style="background-color:#2b303b;color:#96b5b4;">do_stuff</span><span style="background-color:#2b303b;color:#c0c5ce;">(p);
 }
-</span></pre>
+</span></code></pre>
 <p>Boxes are the simplest way to allocate objects on the heap in Rust. Here we just used its <code>new</code> function to create a <code>Box&lt;Person&gt;</code> instance with the <code>Person</code> object returned by <code>create_person</code>, which at this point is on the heap and owned by said box (the box itself is on the stack since it's owned by the variable <code>p</code>). We also changed <code>do_stuff</code>'s signature to take a <code>Box&lt;Person&gt;</code> parameter.</p>
 <p>When we call <code>do_stuff</code> passing the box <code>p</code> as an argument, its ownership is moved to the <code>person</code> parameter, but it still points to the same <code>Person</code> object on the heap, so there's no copying there. The call may cause a copy of the box itself, but it's a very lightweight object, analogous to copying a pointer in C in our second code listing.</p>
 <p>The advantage here is that point 2 from above still applies to this case: when execution reaches the end of <code>do_stuff</code>, the compiler knows that <code>person</code> is the unique owner of the box, so it can deallocate it's memory since no one's using it anymore. However, before deallocating the box, there's an implicit call to the box's <code>drop</code> method (which works as a destructor in Rust) and in the case of the <code>Box</code> type, <code>drop</code> just deallocates the memory it points to on the heap. And there it is! We finally solved our problems.</p>
