@@ -21,13 +21,21 @@
 
       
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js">
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    }
+  };
 </script>
 
     </head>
 
-    <body class="theme-base-08 layout-reverse">
+    <body class="theme-base-08 ">
         
 <div class="sidebar">
     <div class="container sidebar-sticky">
@@ -72,7 +80,7 @@
 <p>We know that operating systems generally divide a process's memory into regions that have different purposes. Here we are mostly interested in the <strong>stack</strong> and the <strong>heap</strong>, since they're the ones providing storage to a running process.</p>
 <h2 id="the-stack">The stack</h2>
 <p>To see how these regions relate to memory management, consider the following C code:</p>
-<pre style="background-color:#393939;">
+<pre style="background-color:#1e1e1e;">
 <code class="language-c"><span style="background-color:#2b303b;color:#b48ead;">#include </span><span style="background-color:#2b303b;color:#c0c5ce;">&lt;</span><span style="background-color:#2b303b;color:#a3be8c;">stdio.h</span><span style="background-color:#2b303b;color:#c0c5ce;">&gt;
 
 </span><span style="background-color:#2b303b;color:#b48ead;">struct </span><span style="background-color:#2b303b;color:#c0c5ce;">Person {
@@ -105,7 +113,7 @@
 <p>Let's call this copying behavior <strong>Copy Semantics</strong> (not standard terminology). As I mentioned before, this can be really computationally expensive, for example, if we have a huge struct that is passed around a lot.</p>
 <h2 id="the-heap">The heap</h2>
 <p>C programmers know that all this copying can be avoided by using pointers and manual memory allocation on the heap. For instance, we can modify the code from before to look like this:</p>
-<pre style="background-color:#393939;">
+<pre style="background-color:#1e1e1e;">
 <code class="language-c"><span style="background-color:#2b303b;color:#b48ead;">#include </span><span style="background-color:#2b303b;color:#c0c5ce;">&lt;</span><span style="background-color:#2b303b;color:#a3be8c;">stdio.h</span><span style="background-color:#2b303b;color:#c0c5ce;">&gt;
 </span><span style="background-color:#2b303b;color:#b48ead;">#include </span><span style="background-color:#2b303b;color:#c0c5ce;">&lt;</span><span style="background-color:#2b303b;color:#a3be8c;">stdlib.h</span><span style="background-color:#2b303b;color:#c0c5ce;">&gt;
 
@@ -148,7 +156,7 @@
 <p>Rust provides no runtime environment apart from it's standard library which puts it closer to how C and C++ work. To address these issues without such an environment, Rust uses two powerful concepts that were introduced by the C++ community: <strong>Move Semantics</strong> and <strong>Scope-Based Resource Management</strong>. One of Rust's novelties comes from backing up these two with its type system. Let's look at some examples.</p>
 <h2 id="move-semantics">Move Semantics</h2>
 <p>Before we begin, let's talk about the concept of ownership in Rust: all objects have one and only one owner. When we write something like</p>
-<pre style="background-color:#393939;">
+<pre style="background-color:#1e1e1e;">
 <code class="language-rust"><span style="background-color:#2b303b;color:#b48ead;">struct </span><span style="background-color:#2b303b;color:#c0c5ce;">Person {
   </span><span style="background-color:#2b303b;color:#bf616a;">age</span><span style="background-color:#2b303b;color:#c0c5ce;">: </span><span style="background-color:#2b303b;color:#b48ead;">u32
 </span><span style="background-color:#2b303b;color:#c0c5ce;">}
@@ -159,8 +167,8 @@
   println!(&quot;</span><span style="background-color:#2b303b;color:#d08770;">{}</span><span style="background-color:#2b303b;color:#c0c5ce;">&quot;, a.age);
 }
 </span></code></pre>
-<p>we are constructing a <code>Person</code> object an assigning it to <code>a</code>, this means that <code>a</code> is the owner of said object. However when we assign <code>a</code> to <code>b</code>, we are moving the ownership of that same object to variable <code>b</code>. Because of that, we cannot access it from a anymore, so that <code>println!</code> line is actually invalid. Indeed, if we try compiling this code we get the following error:</p>
-<pre style="background-color:#393939;">
+<p>we are constructing a <code>Person</code> object and assigning it to <code>a</code>, this means that <code>a</code> is the owner of said object. However when we assign <code>a</code> to <code>b</code>, we are moving the ownership of that same object to variable <code>b</code>. Because of that, we cannot access it from a anymore, so that <code>println!</code> line is actually invalid. Indeed, if we try compiling this code we get the following error:</p>
+<pre style="background-color:#1e1e1e;">
 <code><span style="background-color:#2b303b;color:#c0c5ce;">error[E0382]: borrow of moved value: `a`
  --&gt; src/main.rs:8:20
  
@@ -175,7 +183,7 @@ error: aborting due to previous error
 </span></code></pre>
 <p>The compiler is basically telling us that we are <em>borrowing</em> after we have moved the value from <code>a</code>. We'll see what borrowing means another time, but for now think of it as a way to access an object.</p>
 <p>Now let's apply this to our original context. We can translate our first piece of code from C to Rust in a really straightforward manner:</p>
-<pre style="background-color:#393939;">
+<pre style="background-color:#1e1e1e;">
 <code class="language-rust"><span style="background-color:#2b303b;color:#b48ead;">struct </span><span style="background-color:#2b303b;color:#c0c5ce;">Person {
   </span><span style="background-color:#2b303b;color:#bf616a;">age</span><span style="background-color:#2b303b;color:#c0c5ce;">: </span><span style="background-color:#2b303b;color:#b48ead;">u32
 </span><span style="background-color:#2b303b;color:#c0c5ce;">}
@@ -210,7 +218,7 @@ error: aborting due to previous error
 <p>Point 1 may not seem like a big deal with such a simple example, but besides it's computational properties, being enforced by the compiler provides very interesting mathematical properties about programs and these properties can be used by the compiler to perform optimizations and &quot;prove&quot; the correctness of the code, specially regarding general resource usage. For the mathematically inclined (like me <code>:)</code>), Rust compiler actually implements what's called an <strong>affine type system</strong> which is a kind of <strong>affine logic</strong>.</p>
 <p>Scope-Based Resource Management is traditionally called <strong>Resource acquisition is initialization (RAII)</strong>, which doesn't really convey much about the concept.</p>
 <p>We still have a small problem though: point 3 indicates that there's some copying involved and this bears some of the issues we originally had in C. But that's because we haven't used the heap in Rust yet and luckily we can make use of it with a pretty simple change to our current code:</p>
-<pre style="background-color:#393939;">
+<pre style="background-color:#1e1e1e;">
 <code class="language-rust"><span style="background-color:#2b303b;color:#b48ead;">struct </span><span style="background-color:#2b303b;color:#c0c5ce;">Person {
   </span><span style="background-color:#2b303b;color:#bf616a;">age</span><span style="background-color:#2b303b;color:#c0c5ce;">: </span><span style="background-color:#2b303b;color:#b48ead;">u32
 </span><span style="background-color:#2b303b;color:#c0c5ce;">}

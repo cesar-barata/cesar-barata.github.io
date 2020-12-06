@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>
+    Modeling Regression - Part 1 | cesarb.org
+</title>
+
+      <!-- CSS -->
+      <link rel="stylesheet" href="https:&#x2F;&#x2F;cesarb.org&#x2F;print.css" media="print">
+      <link rel="stylesheet" href="https:&#x2F;&#x2F;cesarb.org&#x2F;poole.css">
+      <link rel="stylesheet" href="https:&#x2F;&#x2F;cesarb.org&#x2F;hyde.css">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+      
+
+      
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    }
+  };
+</script>
+
+    </head>
+
+    <body class="theme-base-08 ">
+        
+<div class="sidebar">
+    <div class="container sidebar-sticky">
+        <div class="sidebar-about">
+            
+                <div>
+                  <a href="https:&#x2F;&#x2F;cesarb.org"><h1>cesarb.org</h1></a>
+                </div>
+                
+            
+        </div>
+
+        <ul class="sidebar-nav">
+            
+            
+            <li class="sidebar-nav-item"><a href="&#x2F;about">About Me</a></li>
+            
+            <li class="sidebar-nav-item"><a href="&#x2F;blog">Blog</a></li>
+            
+            <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;github.com&#x2F;cesar-barata">GitHub</a></li>
+            
+            <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;cesarbarata">LinkedIn</a></li>
+            
+            
+            <br>
+            Copyright © 2020
+        </ul>
+    </div>
+</div>
+
+
+        <div class="content container">
+            
+<div class="post">
+  <h1 class="post-title">Modeling Regression - Part 1</h1>
+  <span class="post-date">02 December 2020</span>
+  <p>$$
+\def\R{{\mathbb{R}}}
+\def\MSE{{\text{MSE}}}
+$$</p>
+<h2 id="prelude">Prelude</h2>
+<p>I've been taking a course on machine learning <em>(ML)</em> lately and it required me to revisit the topic of linear regression. There is some interesting math involved but while learning the concepts I've got interested in modeling the whole process in software.</p>
+<p>The context is that of a learning algorithm that generates a <strong>hypothesis function</strong> <em>(HF)</em> from a set of data points, which is capable of outputting a <em>prediction</em> from a given input not necessarily on the original set of data points. Linear regression is presented as a first learning algorithm.</p>
+<p>Any learning algorithm needs a way to measure how good a candidate HF is, so that it can compare and optimize the final result. This measuring is done by a <strong>cost function</strong> <em>(CF)</em>.</p>
+<p>The CF is a function of the HF, but when the latter can be completely determined by a set of parameters, these parameters can be used as input for the CF. For example, if our HF is an <strong>affine function</strong>
+$$
+\begin{equation}
+\label{eq:affine}
+h(x) = a + bx
+\end{equation}
+$$
+then $a, b \in \R$ can be used as inputs for the CF.</p>
+<p>For linear regression specifically, we model our HF as an affine function (as above) and we can extract a CF as follows:</p>
+<p>Suppose we are given a set of $n$ data points (also called <strong>training examples</strong> in ML lingo) on the plane
+$$
+P_i = (\hat{x_i}, \hat{y_i}) \in \R^2
+$$
+for $i \in \{1,2,3,\cdots,n\}$. Then we can find out the <em>mean squared error (MSE)</em> of our HF, relative to the training examples, by looking the average of the squared difference between the output of the HF and the associated data point. In other symbols:
+$$
+\begin{equation}
+\label{eq:mean-squared-1}
+\MSE(h) = \frac{1}{n} \sum_{i = 1}^n (h(\hat{x_i}) - \hat{y_i})^2
+\end{equation}
+$$
+where $h$ is an HF candidate. $\MSE$ is an example of cost function.</p>
+<p>Since we are doing linear regression, $h$ must be an affine function, therefore it has the same the form as equation $\ref{eq:affine}$, meaning $h$ is completely determined by parameters $a$ and $b$, and therefore we may rewrite $\ref{eq:mean-squared-1}$ as
+$$
+\begin{equation}
+\label{eq:mean-squared-2}
+\MSE(a, b) = \frac{1}{n} \sum_{i = 1}^n (a + b\hat{x_i} - \hat{y_i})^2.
+\end{equation}
+$$
+Our goal is to minimize the CF, because that would mean the HF differs minimally from the data points, and with this version of $\MSE$ (as a function from $\R^2$ to $\R$), we can use the optimization tools from calculus, in particular, the <em>Gradient Descent</em> algorithm.</p>
+<h2 id="some-code">Some code</h2>
+<p>The point of the prelude above was to outline the process and the involved data at each step. For example, I emphasized that the cost function $\MSE$ depends on the hypothesis function as an indicator that this could be modeled, in its general form, as a higher-order function.</p>
+<p>I will be using <strong>Julia</strong> for the examples, since it has great support for lexical closures, higher-order functions and also number crunching.</p>
+<p>We could simply define an MSE function that calculates the error for given HF, but we would like to factor out some reusable code. For example, by the definition of MSE, we need a function to do summation and  another for averaging.</p>
+<p>Luckly, Julia already provides a (higher-order) function <code>sum</code> which applies a given function on each element of an array and adds all the results together. The expression <code>sum(f, A)</code> would be equivalent to
+$$
+\sum_{i=1}^n f(A_i)
+$$</p>
+<blockquote>
+<p>Notice we are indexing from $1$, just as Julia.</p>
+</blockquote>
+<p>We can now define our <code>average</code> function simply as</p>
+<pre style="background-color:#1e1e1e;">
+<code class="language-julia"><span style="background-color:#2b303b;color:#b48ead;">function </span><span style="background-color:#2b303b;color:#8fa1b3;">average</span><span style="background-color:#2b303b;color:#c0c5ce;">(term, data)
+    sum(term, data) / length(data)
+</span><span style="background-color:#2b303b;color:#b48ead;">end
+</span></code></pre>
+<blockquote>
+<p>We are ignoring error handling for simplicity as usual, but this is fine here, since <code>sum</code> already throws an error when the array <code>data</code> is empty, which would also cause a division by zero on <code>average</code>.</p>
+</blockquote>
+<p>Julia provides the nice <a href="https://docs.julialang.org/en/v1/manual/functions/#Do-Block-Syntax-for-Function-Arguments">do-block syntax</a> to pass anonymous functions as the <em>first</em> parameter of a higher-order function.</p>
+<pre style="background-color:#1e1e1e;">
+<code class="language-julia"><span style="background-color:#2b303b;color:#65737e;"># this...
+</span><span style="background-color:#2b303b;color:#c0c5ce;">average(x -&gt; x * </span><span style="background-color:#2b303b;color:#d08770;">2</span><span style="background-color:#2b303b;color:#c0c5ce;">, [</span><span style="background-color:#2b303b;color:#d08770;">1</span><span style="background-color:#2b303b;color:#c0c5ce;">,</span><span style="background-color:#2b303b;color:#d08770;">2</span><span style="background-color:#2b303b;color:#c0c5ce;">,</span><span style="background-color:#2b303b;color:#d08770;">3</span><span style="background-color:#2b303b;color:#c0c5ce;">])
+
+</span><span style="background-color:#2b303b;color:#65737e;"># ...can be rewritten as
+</span><span style="background-color:#2b303b;color:#c0c5ce;">average([</span><span style="background-color:#2b303b;color:#d08770;">1</span><span style="background-color:#2b303b;color:#c0c5ce;">,</span><span style="background-color:#2b303b;color:#d08770;">2</span><span style="background-color:#2b303b;color:#c0c5ce;">,</span><span style="background-color:#2b303b;color:#d08770;">3</span><span style="background-color:#2b303b;color:#c0c5ce;">]) </span><span style="background-color:#2b303b;color:#b48ead;">do</span><span style="background-color:#2b303b;color:#c0c5ce;"> x
+    x * </span><span style="background-color:#2b303b;color:#d08770;">2
+</span><span style="background-color:#2b303b;color:#b48ead;">end
+</span></code></pre>
+<p>Now we can write our MSE function as follows: it takes a candidate HF <code>h</code> and an array <code>dataPoints</code> of $2$-tuples of numbers as parameters an computes the <code>average</code> when <code>term</code> is the function the computes the square of the difference as mentioned before</p>
+<pre style="background-color:#1e1e1e;">
+<code class="language-julia"><span style="background-color:#2b303b;color:#b48ead;">function </span><span style="background-color:#2b303b;color:#8fa1b3;">meanSquaredError</span><span style="background-color:#2b303b;color:#c0c5ce;">(h, dataPoints)
+    average(dataPoints) </span><span style="background-color:#2b303b;color:#b48ead;">do </span><span style="background-color:#2b303b;color:#c0c5ce;">(x, y)
+        (h(x) - y)^</span><span style="background-color:#2b303b;color:#d08770;">2
+    </span><span style="background-color:#2b303b;color:#b48ead;">end
+end
+</span></code></pre>
+<p>which would be the equivalent to $\ref{eq:mean-squared-1}$, but we can use it to create a version that is specialized for affine functions, matching equation $\ref{eq:mean-squared-2}$:</p>
+<pre style="background-color:#1e1e1e;">
+<code class="language-julia"><span style="background-color:#2b303b;color:#b48ead;">function </span><span style="background-color:#2b303b;color:#8fa1b3;">mseAffine</span><span style="background-color:#2b303b;color:#c0c5ce;">(a, b, dataPoints)
+    meanSquaredError(x -&gt; a + b * x, dataPoints)
+</span><span style="background-color:#2b303b;color:#b48ead;">end
+</span></code></pre>
+<p>We are now able to generate as many CFs as we want by using <code>mseAffine</code> with different parameters <code>a</code> and <code>b</code> and check which ones better approximate some fixed set of data points.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>This is all really simple code, but the point here is to illustrate that by using higher-order functions, we were able construct a <em>software</em> model that closely resembles what we already had as a mathematical model, despite some minor notational differences.</p>
+<p>This is important, because there's less &quot;impedance mismatch&quot; when we have to switch from working with the math to working with the program and back, similar to using the same programming language for the front end and back end in a Web project, for instance. This is specially true for ML, since it uses lots of statistical methods in its algorithms.</p>
+<p>On next posts, I will be implementing some related optimization algorithms in this same manner to further illustrate how simple it is to provide more functionality while following some good software development practices.</p>
+
+</div>
+
+        </div>
+
+    </body>
+
+</html>
