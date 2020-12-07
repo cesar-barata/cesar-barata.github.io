@@ -20,17 +20,31 @@
       
 
       
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-147261147-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-147261147-1');
+</script>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@700&display=swap" rel="stylesheet"> 
+<link rel="stylesheet" href="https:&#x2F;&#x2F;cesarb.org&#x2F;custom.css">
+
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script type="text/javascript" id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
 <script>
-  MathJax = {
-    tex: {
-      inlineMath: [['$', '$'], ['\\(', '\\)']],
-      tags: 'ams'
-    }
-  };
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            tags: 'ams'
+        }
+    };
 </script>
 
     </head>
@@ -42,7 +56,9 @@
         <div class="sidebar-about">
             
                 <div>
-                  <a href="https:&#x2F;&#x2F;cesarb.org"><h1>cesarb.org</h1></a>
+                    <a href="https:&#x2F;&#x2F;cesarb.org">
+                        <h1 id="blog-title">cesarb.org</h1>
+                    </a>
                 </div>
                 
             
@@ -50,15 +66,15 @@
 
         <ul class="sidebar-nav">
             
-            
-            <li class="sidebar-nav-item"><a href="&#x2F;about">About Me</a></li>
-            
-            <li class="sidebar-nav-item"><a href="&#x2F;blog">Blog</a></li>
-            
-            <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;github.com&#x2F;cesar-barata">GitHub</a></li>
-            
-            <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;cesarbarata">LinkedIn</a></li>
-            
+                
+                    <li class="sidebar-nav-item"><a href="&#x2F;about">About Me</a></li>
+                
+                    <li class="sidebar-nav-item"><a href="&#x2F;blog">Blog</a></li>
+                
+                    <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;github.com&#x2F;cesar-barata">GitHub</a></li>
+                
+                    <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;cesarbarata">LinkedIn</a></li>
+                
             
             <br>
             Copyright © 2020
@@ -70,9 +86,10 @@
         <div class="content container">
             
 <div class="post">
-  <h1 class="post-title">Rust By Comparison</h1>
-  <span class="post-date">29 August 2019</span>
-  <p>I really like learning new programming languages, especially the ones that make you reconsider some fundamental assumptions you make when writing code or designing a piece of software. I've been playing with <a href="http://rust-lang.org">Rust</a> for some time now and I can definitely say that it's one of these languages.</p>
+    <h1 class="post-title">Rust By Comparison</h1>
+    <span class="post-date">29 August 2019</span>
+    <div class="post-content">
+        <p>I really like learning new programming languages, especially the ones that make you reconsider some fundamental assumptions you make when writing code or designing a piece of software. I've been playing with <a href="http://rust-lang.org">Rust</a> for some time now and I can definitely say that it's one of these languages.</p>
 <p>In a couple of words, one can say Rust is a high-level low-level programming language. What I mean by that is: Rust is a low-level language, in the sense that its programming model is closer to the hardware's so that you have to consider stuff like memory allocation and deallocation (to a certain degree), procedure calling conventions (call-by-value, call-by-reference, ...) and so on.</p>
 <p>Despite that, it provides many features that are considered high-level, some of which are of great help when dealing with the low-level aspects. In particular, Rust has a very powerful <strong>type system</strong> that help enforce correctness of a lot of programming constructs.</p>
 <p>So let's get into some of the details of what makes Rust such a remarkable language. I won't dedicate much time to Rust's syntax unless it's absolutely necessary, since there are already very good sources for learning that. The focus here is on semantics.</p>
@@ -261,6 +278,7 @@ error: aborting due to previous error
 </li>
 </ul>
 
+    </div>
 </div>
 
         </div>

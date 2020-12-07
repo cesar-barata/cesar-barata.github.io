@@ -20,17 +20,31 @@
       
 
       
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-147261147-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-147261147-1');
+</script>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@700&display=swap" rel="stylesheet"> 
+<link rel="stylesheet" href="https:&#x2F;&#x2F;cesarb.org&#x2F;custom.css">
+
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script type="text/javascript" id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
 <script>
-  MathJax = {
-    tex: {
-      inlineMath: [['$', '$'], ['\\(', '\\)']],
-      tags: 'ams'
-    }
-  };
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            tags: 'ams'
+        }
+    };
 </script>
 
     </head>
@@ -42,7 +56,9 @@
         <div class="sidebar-about">
             
                 <div>
-                  <a href="https:&#x2F;&#x2F;cesarb.org"><h1>cesarb.org</h1></a>
+                    <a href="https:&#x2F;&#x2F;cesarb.org">
+                        <h1 id="blog-title">cesarb.org</h1>
+                    </a>
                 </div>
                 
             
@@ -50,15 +66,15 @@
 
         <ul class="sidebar-nav">
             
-            
-            <li class="sidebar-nav-item"><a href="&#x2F;about">About Me</a></li>
-            
-            <li class="sidebar-nav-item"><a href="&#x2F;blog">Blog</a></li>
-            
-            <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;github.com&#x2F;cesar-barata">GitHub</a></li>
-            
-            <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;cesarbarata">LinkedIn</a></li>
-            
+                
+                    <li class="sidebar-nav-item"><a href="&#x2F;about">About Me</a></li>
+                
+                    <li class="sidebar-nav-item"><a href="&#x2F;blog">Blog</a></li>
+                
+                    <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;github.com&#x2F;cesar-barata">GitHub</a></li>
+                
+                    <li class="sidebar-nav-item"><a href="https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;cesarbarata">LinkedIn</a></li>
+                
             
             <br>
             Copyright © 2020
@@ -70,9 +86,10 @@
         <div class="content container">
             
 <div class="post">
-  <h1 class="post-title">Modeling Regression - Part 1</h1>
-  <span class="post-date">02 December 2020</span>
-  <p>$$
+    <h1 class="post-title">Modeling Regression - Part 1</h1>
+    <span class="post-date"> 2 December 2020</span>
+    <div class="post-content">
+        <p>$$
 \def\R{{\mathbb{R}}}
 \def\MSE{{\text{MSE}}}
 $$</p>
@@ -159,6 +176,7 @@ end
 <p>This is important, because there's less &quot;impedance mismatch&quot; when we have to switch from working with the math to working with the program and back, similar to using the same programming language for the front end and back end in a Web project, for instance. This is specially true for ML, since it uses lots of statistical methods in its algorithms.</p>
 <p>On next posts, I will be implementing some related optimization algorithms in this same manner to further illustrate how simple it is to provide more functionality while following some good software development practices.</p>
 
+    </div>
 </div>
 
         </div>
