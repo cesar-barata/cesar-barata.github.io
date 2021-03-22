@@ -8,7 +8,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
       <title>
-    Modeling Regression - Part 1 | cesarb.org
+    Modeling Regression with Julia | cesarb.org
 </title>
 
       <!-- CSS -->
@@ -86,7 +86,7 @@
         <div class="content container">
             
 <div class="post">
-    <h1 class="post-title">Modeling Regression - Part 1</h1>
+    <h1 class="post-title">Modeling Regression with Julia</h1>
     <span class="post-date"> 2 December 2020</span>
     <div class="post-content">
         <p>$$
@@ -139,42 +139,41 @@ $$</p>
 </blockquote>
 <p>We can now define our <code>average</code> function simply as</p>
 <pre style="background-color:#1e1e1e;">
-<code class="language-julia"><span style="background-color:#2b303b;color:#b48ead;">function </span><span style="background-color:#2b303b;color:#8fa1b3;">average</span><span style="background-color:#2b303b;color:#c0c5ce;">(term, data)
-    sum(term, data) / length(data)
-</span><span style="background-color:#2b303b;color:#b48ead;">end
+<code class="language-julia" data-lang="julia"><span style="color:#569cd6;">function </span><span style="color:#dcdcdc;">average(term, data)
+    sum(term, data) </span><span style="color:#569cd6;">/</span><span style="color:#dcdcdc;"> length(data)
+</span><span style="color:#569cd6;">end
 </span></code></pre>
 <blockquote>
 <p>We are ignoring error handling for simplicity as usual, but this is fine here, since <code>sum</code> already throws an error when the array <code>data</code> is empty, which would also cause a division by zero on <code>average</code>.</p>
 </blockquote>
 <p>Julia provides the nice <a href="https://docs.julialang.org/en/v1/manual/functions/#Do-Block-Syntax-for-Function-Arguments">do-block syntax</a> to pass anonymous functions as the <em>first</em> parameter of a higher-order function.</p>
 <pre style="background-color:#1e1e1e;">
-<code class="language-julia"><span style="background-color:#2b303b;color:#65737e;"># this...
-</span><span style="background-color:#2b303b;color:#c0c5ce;">average(x -&gt; x * </span><span style="background-color:#2b303b;color:#d08770;">2</span><span style="background-color:#2b303b;color:#c0c5ce;">, [</span><span style="background-color:#2b303b;color:#d08770;">1</span><span style="background-color:#2b303b;color:#c0c5ce;">,</span><span style="background-color:#2b303b;color:#d08770;">2</span><span style="background-color:#2b303b;color:#c0c5ce;">,</span><span style="background-color:#2b303b;color:#d08770;">3</span><span style="background-color:#2b303b;color:#c0c5ce;">])
+<code class="language-julia" data-lang="julia"><span style="color:#608b4e;"># this...
+</span><span style="color:#dcdcdc;">average(x </span><span style="color:#569cd6;">-&gt;</span><span style="color:#dcdcdc;"> x </span><span style="color:#569cd6;">* </span><span style="color:#b5cea8;">2</span><span style="color:#dcdcdc;">, [</span><span style="color:#b5cea8;">1</span><span style="color:#dcdcdc;">,</span><span style="color:#b5cea8;">2</span><span style="color:#dcdcdc;">,</span><span style="color:#b5cea8;">3</span><span style="color:#dcdcdc;">])
 
-</span><span style="background-color:#2b303b;color:#65737e;"># ...can be rewritten as
-</span><span style="background-color:#2b303b;color:#c0c5ce;">average([</span><span style="background-color:#2b303b;color:#d08770;">1</span><span style="background-color:#2b303b;color:#c0c5ce;">,</span><span style="background-color:#2b303b;color:#d08770;">2</span><span style="background-color:#2b303b;color:#c0c5ce;">,</span><span style="background-color:#2b303b;color:#d08770;">3</span><span style="background-color:#2b303b;color:#c0c5ce;">]) </span><span style="background-color:#2b303b;color:#b48ead;">do</span><span style="background-color:#2b303b;color:#c0c5ce;"> x
-    x * </span><span style="background-color:#2b303b;color:#d08770;">2
-</span><span style="background-color:#2b303b;color:#b48ead;">end
+</span><span style="color:#608b4e;"># ...can be rewritten as
+</span><span style="color:#dcdcdc;">average([</span><span style="color:#b5cea8;">1</span><span style="color:#dcdcdc;">,</span><span style="color:#b5cea8;">2</span><span style="color:#dcdcdc;">,</span><span style="color:#b5cea8;">3</span><span style="color:#dcdcdc;">]) </span><span style="color:#569cd6;">do</span><span style="color:#dcdcdc;"> x
+    x </span><span style="color:#569cd6;">* </span><span style="color:#b5cea8;">2
+</span><span style="color:#569cd6;">end
 </span></code></pre>
 <p>Now we can write our MSE function as follows: it takes a candidate HF <code>h</code> and an array <code>dataPoints</code> of $2$-tuples of numbers as parameters an computes the <code>average</code> when <code>term</code> is the function the computes the square of the difference as mentioned before</p>
 <pre style="background-color:#1e1e1e;">
-<code class="language-julia"><span style="background-color:#2b303b;color:#b48ead;">function </span><span style="background-color:#2b303b;color:#8fa1b3;">meanSquaredError</span><span style="background-color:#2b303b;color:#c0c5ce;">(h, dataPoints)
-    average(dataPoints) </span><span style="background-color:#2b303b;color:#b48ead;">do </span><span style="background-color:#2b303b;color:#c0c5ce;">(x, y)
-        (h(x) - y)^</span><span style="background-color:#2b303b;color:#d08770;">2
-    </span><span style="background-color:#2b303b;color:#b48ead;">end
+<code class="language-julia" data-lang="julia"><span style="color:#569cd6;">function </span><span style="color:#dcdcdc;">meanSquaredError(h, dataPoints)
+    average(dataPoints) </span><span style="color:#569cd6;">do </span><span style="color:#dcdcdc;">(x, y)
+        (h(x) </span><span style="color:#569cd6;">-</span><span style="color:#dcdcdc;"> y)</span><span style="color:#569cd6;">^</span><span style="color:#b5cea8;">2
+    </span><span style="color:#569cd6;">end
 end
 </span></code></pre>
 <p>which would be the equivalent to $\ref{eq:mean-squared-1}$, but we can use it to create a version that is specialized for affine functions, matching equation $\ref{eq:mean-squared-2}$:</p>
 <pre style="background-color:#1e1e1e;">
-<code class="language-julia"><span style="background-color:#2b303b;color:#b48ead;">function </span><span style="background-color:#2b303b;color:#8fa1b3;">mseAffine</span><span style="background-color:#2b303b;color:#c0c5ce;">(a, b, dataPoints)
-    meanSquaredError(x -&gt; a + b * x, dataPoints)
-</span><span style="background-color:#2b303b;color:#b48ead;">end
+<code class="language-julia" data-lang="julia"><span style="color:#569cd6;">function </span><span style="color:#dcdcdc;">mseAffine(a, b, dataPoints)
+    meanSquaredError(x </span><span style="color:#569cd6;">-&gt;</span><span style="color:#dcdcdc;"> a </span><span style="color:#569cd6;">+</span><span style="color:#dcdcdc;"> b </span><span style="color:#569cd6;">*</span><span style="color:#dcdcdc;"> x, dataPoints)
+</span><span style="color:#569cd6;">end
 </span></code></pre>
 <p>We are now able to generate as many CFs as we want by using <code>mseAffine</code> with different parameters <code>a</code> and <code>b</code> and check which ones better approximate some fixed set of data points.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>This is all really simple code, but the point here is to illustrate that by using higher-order functions, we were able construct a <em>software</em> model that closely resembles what we already had as a mathematical model, despite some minor notational differences.</p>
 <p>This is important, because there's less &quot;impedance mismatch&quot; when we have to switch from working with the math to working with the program and back, similar to using the same programming language for the front end and back end in a Web project, for instance. This is specially true for ML, since it uses lots of statistical methods in its algorithms.</p>
-<p>On next posts, I will be implementing some related optimization algorithms in this same manner to further illustrate how simple it is to provide more functionality while following some good software development practices.</p>
 
     </div>
 </div>
